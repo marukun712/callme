@@ -3,7 +3,9 @@
   "specifiers": {
     "jsr:@std/assert@1": "1.0.19",
     "jsr:@std/internal@^1.0.12": "1.0.14",
-    "npm:@biomejs/biome@*": "2.5.8"
+    "npm:@biomejs/biome@*": "2.5.8",
+    "npm:zod@3.23.8": "3.23.8",
+    "npm:zod@^4.4.3": "4.4.3"
   },
   "jsr": {
     "@std/assert@1.0.19": {
@@ -70,11 +72,18 @@
       "integrity": "sha512-I2czzXTY61f3nFJxXoMDq80t7MivxDEnCjE+8sDKoFfcKMaoQdkqhIFQ3KyY0XLzeSpUBYeNAXgD+iOV/BU0VA==",
       "os": ["win32"],
       "cpu": ["x64"]
+    },
+    "zod@3.23.8": {
+      "integrity": "sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g=="
+    },
+    "zod@4.4.3": {
+      "integrity": "sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ=="
     }
   },
   "workspace": {
     "dependencies": [
-      "jsr:@std/assert@1"
+      "jsr:@std/assert@1",
+      "npm:zod@^4.4.3"
     ]
   }
 }
