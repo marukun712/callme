@@ -1,13 +1,18 @@
 {
   "version": "5",
   "specifiers": {
+    "jsr:@atcute/tid@^1.0.2": "1.0.2",
     "jsr:@std/assert@1": "1.0.19",
     "jsr:@std/internal@^1.0.12": "1.0.14",
     "npm:@biomejs/biome@*": "2.5.8",
+    "npm:sip-parser@^1.5.1": "1.5.1",
     "npm:zod@3.23.8": "3.23.8",
     "npm:zod@^4.4.3": "4.4.3"
   },
   "jsr": {
+    "@atcute/tid@1.0.2": {
+      "integrity": "83e41a7d14fbb90d384f6ab1d6084eb5eedbd2cd29699a15dcfe9c1138a8bf66"
+    },
     "@std/assert@1.0.19": {
       "integrity": "eaada96ee120cb980bc47e040f82814d786fe8162ecc53c91d8df60b8755991e",
       "dependencies": [
@@ -73,6 +78,9 @@
       "os": ["win32"],
       "cpu": ["x64"]
     },
+    "sip-parser@1.5.1": {
+      "integrity": "sha512-vbRjCt+EJ3EG0VukAjBUmHVT80wVQqmbeU0KFg7bTdRGmkSesJXGODcM8t468XQD28FizSLeCJzPSe0JGMvTwg=="
+    },
     "zod@3.23.8": {
       "integrity": "sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g=="
     },
@@ -82,7 +90,9 @@
   },
   "workspace": {
     "dependencies": [
+      "jsr:@atcute/tid@^1.0.2",
       "jsr:@std/assert@1",
+      "npm:sip-parser@^1.5.1",
       "npm:zod@^4.4.3"
     ]
   }
