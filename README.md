@@ -66,3 +66,16 @@ WireGuard内でIP電話をするためのシンプルなProxyです。
 ```
 
 電話機とcallmeサーバーは有線LAN等で接続します。callmeサーバーがネットワーク上の論理的な電話機として振る舞い、callmeサーバー同士がエンドツーエンドでやりとりします。callmeサーバーはSIP, RTPパケットをすべて電話機にproxyします。そのため、電話機はWireGuardのピアとして振る舞いません。
+
+# Usage
+
+configファイルをコピーして編集します。
+```bash
+cp config.example.ts config.ts
+```
+
+サーバーを実行します
+
+```bash
+deno task dev
+```

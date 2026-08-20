@@ -1,3 +1,5 @@
+import { Netmask } from "netmask";
+
 let localPhone: Deno.NetAddr | null = null;
 
 export function getLocalPhone(): Deno.NetAddr | null {
@@ -10,6 +12,11 @@ export function setLocalPhone(addr: Deno.NetAddr) {
 
 export function resolveIp(user: string, subnet: string): string | undefined {
 	const num = Number(user);
-	if (!Number.isInteger(num) || num < 1 || num > 255) return undefined;
-	return `${subnet}.${num}`;
+	if (!Number.isInteger(num)) return undefined;
+
+	const block = new Netmask(`${subnet}/24`);
+	const prefix = block.base.split(".").slice(0, 3).join(".");
+	const ip = `${prefix}.${num}`;
+
+	return block.contains(ip) ? ip : undefined;
 }
