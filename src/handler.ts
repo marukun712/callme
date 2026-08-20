@@ -161,6 +161,7 @@ async function handleRequest(
 	remoteAddr: Deno.NetAddr,
 	socket: Deno.DatagramConn,
 	ownIp: string,
+	subnet: string,
 ) {
 	const { method, requestUri } = req;
 	const callId = findHeader(req.headers, "call-id")?.fieldValue ?? "";
@@ -180,8 +181,7 @@ async function handleRequest(
 		return;
 	}
 
-	// 内線番号をipに変換(10.0.10.内線番号)
-	const targetIp = resolveIp(targetUser);
+	const targetIp = resolveIp(targetUser, subnet);
 	if (!targetIp) {
 		logError("ROUTE", `番号 "${targetUser}" は解決できません -> 404 Not Found`);
 		await send(socket, buildResponse(404, "Not Found", req), remoteAddr);
@@ -275,6 +275,7 @@ export async function handleMessage(
 	remoteAddr: Deno.NetAddr,
 	socket: Deno.DatagramConn,
 	ownIp: string,
+	subnet: string,
 ) {
 	const from = `${remoteAddr.hostname}:${remoteAddr.port}`;
 
@@ -304,7 +305,7 @@ export async function handleMessage(
 		req.method === "BYE" ||
 		req.method === "CANCEL"
 	) {
-		await handleRequest(req, remoteAddr, socket, ownIp);
+		await handleRequest(req, remoteAddr, socket, ownIp, subnet);
 		return;
 	}
 

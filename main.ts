@@ -3,11 +3,16 @@ import { log, logError } from "./src/logger.ts";
 
 async function main() {
 	const num = Number(Deno.args[0]);
+	const subnet = Deno.args[1];
 	if (!Deno.args[0] || !Number.isInteger(num) || num < 1 || num > 255) {
-		console.error("使用方法: deno task dev <内線番号 1-255>");
+		console.error("使用方法: deno task dev <内線番号 1-255> <サブネット>");
 		Deno.exit(1);
 	}
-	const ownIp = `10.0.10.${num}`;
+	if (!subnet) {
+		console.error("使用方法: deno task dev <内線番号 1-255> <サブネット>");
+		Deno.exit(1);
+	}
+	const ownIp = `${subnet}.${num}`;
 
 	const socket = Deno.listenDatagram({
 		hostname: "0.0.0.0",
@@ -18,8 +23,8 @@ async function main() {
 
 	for await (const [data, remoteAddr] of socket) {
 		const raw = new TextDecoder().decode(data);
-		handleMessage(raw, remoteAddr as Deno.NetAddr, socket, ownIp).catch((e) =>
-			logError("ERROR", String(e)),
+		handleMessage(raw, remoteAddr as Deno.NetAddr, socket, ownIp, subnet).catch(
+			(e) => logError("ERROR", String(e)),
 		);
 	}
 }
