@@ -19,7 +19,7 @@ async function main() {
 	});
 	log(
 		"BOOT",
-		`SIPサーバー起動 udp/${config.port} で待受中 (サブネット:${config.subnet}/24)`,
+		`SIPサーバー起動 udp/${config.port} で待受中 (サブネット:${config.subnet}/24, 内線番号:${config.number})`,
 	);
 
 	for await (const [data, remoteAddr] of socket) {
