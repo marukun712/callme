@@ -5,6 +5,9 @@
     "jsr:@std/assert@1": "1.0.19",
     "jsr:@std/internal@^1.0.12": "1.0.14",
     "npm:@biomejs/biome@*": "2.5.8",
+    "npm:@types/sdp-transform@3": "3.0.0",
+    "npm:sdp-transform@3": "3.0.0",
+    "npm:sdp@^3.2.2": "3.2.2",
     "npm:sip-parser@^1.5.1": "1.5.1",
     "npm:zod@3.23.8": "3.23.8",
     "npm:zod@^4.4.3": "4.4.3"
@@ -78,6 +81,16 @@
       "os": ["win32"],
       "cpu": ["x64"]
     },
+    "@types/sdp-transform@3.0.0": {
+      "integrity": "sha512-TLwbrRILH3mwnrXgjZLb2LXursBR/dnumGgFWKm8Jw3nTJCAN0g80pvS4KVpXHz4DpYtne762lcXin9GmShGbg=="
+    },
+    "sdp-transform@3.0.0": {
+      "integrity": "sha512-gfYVRGxjHkGF2NPeUWHw5u6T/KGFtS5/drPms73gaSuMaVHKCY3lpLnGDfswVQO0kddeePoti09AwhYP4zA8dQ==",
+      "bin": true
+    },
+    "sdp@3.2.2": {
+      "integrity": "sha512-xZocWwfyp4hkbN4hLWxMjmv2Q8aNa9MhmOZ7L9aCZPT+dZsgRr6wZRrSYE3HTdyk/2pZKPSgqI7ns7Een1xMSA=="
+    },
     "sip-parser@1.5.1": {
       "integrity": "sha512-vbRjCt+EJ3EG0VukAjBUmHVT80wVQqmbeU0KFg7bTdRGmkSesJXGODcM8t468XQD28FizSLeCJzPSe0JGMvTwg=="
     },
@@ -92,6 +105,9 @@
     "dependencies": [
       "jsr:@atcute/tid@^1.0.2",
       "jsr:@std/assert@1",
+      "npm:@types/sdp-transform@3",
+      "npm:sdp-transform@3",
+      "npm:sdp@^3.2.2",
       "npm:sip-parser@^1.5.1",
       "npm:zod@^4.4.3"
     ]
