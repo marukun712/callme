@@ -19,8 +19,6 @@ export function allocateRtpPort(): number {
 }
 
 export async function relayRtp(session: RtpSession) {
-	// near = phone1 ip
-	// far = callme2 ip
 	try {
 		for await (const [data, remoteAddr] of session.socket) {
 			const src = remoteAddr as Deno.NetAddr;
