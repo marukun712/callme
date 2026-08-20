@@ -2,7 +2,7 @@ import { parse as parseSdp, write as writeSdp } from "sdp-transform";
 
 export function rewriteSdpContent(
 	content: string,
-	ownIp: string,
+	ip: string,
 	localPort: number,
 ): { content: string; originalAddr: Deno.NetAddr } | null {
 	const sdp = parseSdp(content);
@@ -12,10 +12,10 @@ export function rewriteSdpContent(
 	const originalIp = audio.connection?.ip ?? sdp.connection?.ip ?? "";
 	const originalPort = audio.port;
 
-	sdp.origin.address = ownIp;
-	if (sdp.connection) sdp.connection.ip = ownIp;
+	sdp.origin.address = ip;
+	if (sdp.connection) sdp.connection.ip = ip;
 	for (const m of sdp.media) {
-		if (m.connection) m.connection.ip = ownIp;
+		if (m.connection) m.connection.ip = ip;
 		if (m.type === "audio") m.port = localPort;
 	}
 

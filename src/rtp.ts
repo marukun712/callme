@@ -41,6 +41,6 @@ export async function relayRtp(session: RtpSession) {
 			}
 		}
 	} catch (e) {
-		logError("RTP", String(e));
+		logError(String(e));
 	}
 }

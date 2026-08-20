@@ -3,6 +3,7 @@ import { stringify, type types } from "sip-parser";
 
 export type SIPMessage = types.SIPMessage;
 export type SIPRequest = types.SIPRequest;
+export type SIPResponse = types.SIPResponse;
 export type Header = types.Header;
 
 export function findHeader(
@@ -40,7 +41,14 @@ export function insertVia(headers: Header[], ownIp: string): Header[] {
 }
 
 export function removeFirstVia(headers: Header[]): Header[] {
-	return headers.slice(1);
+	let removed = false;
+	return headers.filter((h) => {
+		if (!removed && h.fieldName.toLowerCase() === "via") {
+			removed = true;
+			return false;
+		}
+		return true;
+	});
 }
 
 export function buildResponse(
