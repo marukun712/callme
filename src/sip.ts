@@ -42,11 +42,11 @@ function addTagToTo(toHeaders: Header[]): Header[] {
 	});
 }
 
-export function insertVia(headers: Header[], ownIp: string): Header[] {
+export function insertVia(headers: Header[], ip: string): Header[] {
 	const branch = `z9hG4bK${TID.now()}`;
 	const via: Header = {
 		fieldName: "Via",
-		fieldValue: `SIP/2.0/UDP ${ownIp}:5060;branch=${branch}`,
+		fieldValue: `SIP/2.0/UDP ${ip}:5060;branch=${branch}`,
 	};
 	return [via, ...headers];
 }
@@ -63,7 +63,6 @@ export function removeFirstVia(headers: Header[]): Header[] {
 }
 
 export function buildRegisterResponse(req: SIPRequest): string {
-	const contactHeaders = filterHeaders(req.headers, "contact");
 	const expiresHeader = findHeader(req.headers, "expires");
 
 	const headers: Header[] = [
@@ -72,7 +71,7 @@ export function buildRegisterResponse(req: SIPRequest): string {
 		...addTagToTo(filterHeaders(req.headers, "to")),
 		...filterHeaders(req.headers, "call-id"),
 		...filterHeaders(req.headers, "cseq"),
-		...contactHeaders,
+		...filterHeaders(req.headers, "contact"),
 		...(expiresHeader ? [expiresHeader] : []),
 		{ fieldName: "Content-Length", fieldValue: "0" },
 	];
@@ -115,6 +114,25 @@ export function hasSdpContent(headers: Header[], content: string): boolean {
 			h.fieldValue.toLowerCase().includes("sdp"),
 		)
 	);
+}
+
+export function rewriteContactIp(headers: Header[], newIp: string): Header[] {
+	return headers.map((h) => {
+		if (h.fieldName.toLowerCase() !== "contact") return h;
+		const value = h.fieldValue;
+		const atIdx = value.indexOf("@");
+		if (atIdx === -1) return h;
+		let endIdx = value.length;
+		for (let i = atIdx + 1; i < value.length; i++) {
+			const c = value[i];
+			if (c === ":" || c === ";" || c === ">" || c === " ") {
+				endIdx = i;
+				break;
+			}
+		}
+		const newValue = value.slice(0, atIdx + 1) + newIp + value.slice(endIdx);
+		return { ...h, fieldValue: newValue };
+	});
 }
 
 export function updateContentLength(

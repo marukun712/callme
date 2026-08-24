@@ -17,6 +17,7 @@ import {
 	hasSdpContent,
 	insertVia,
 	removeFirstVia,
+	rewriteContactIp,
 	type SIPRequest,
 	type SIPResponse,
 	updateContentLength,
@@ -76,6 +77,7 @@ async function handleIncomingRequest(
 
 	let content = req.content;
 	let headers = insertVia(req.headers, ip.wg);
+	headers = rewriteContactIp(headers, ip.lan);
 
 	// phone2からの着信のため、SDPはphone1が到達可能なlanアドレスにする
 	if (req.method === "INVITE" && hasSdpContent(req.headers, content)) {
@@ -121,6 +123,7 @@ async function handleOutgoingRequest(
 
 	let content = req.content;
 	let headers = insertVia(req.headers, ip.wg);
+	headers = rewriteContactIp(headers, ip.wg);
 
 	// phone1から発信するため、SDPはcallme2が到達可能なwgアドレスにする
 	if (req.method === "INVITE" && hasSdpContent(req.headers, content)) {
@@ -202,11 +205,13 @@ async function handleOutgoingResponse(
 ) {
 	if ("method" in msg) return;
 
+	// callme同士の通話のみを想定し、viaが電話ip + callme ipで積み上がっていることを想定する
 	const vias = filterHeaders(msg.headers, "via");
 	if (vias.length < 2) {
 		logError("応答のViaが1つしかなく転送先が不明なため破棄");
 		return;
 	}
+	// 電話ipは2番目のため
 	const addr = viaToAddr(vias[1]);
 	if (!addr) {
 		logError("Viaヘッダーからアドレスをパースできないため破棄");
@@ -215,6 +220,7 @@ async function handleOutgoingResponse(
 
 	let content = msg.content;
 	let headers = removeFirstVia(msg.headers);
+	headers = rewriteContactIp(headers, ip.lan);
 
 	if (hasSdpContent(msg.headers, content)) {
 		const callId = findHeader(msg.headers, "call-id")?.fieldValue ?? "";
@@ -266,6 +272,7 @@ async function handleIncomingResponse(
 
 	let content = msg.content;
 	let headers = removeFirstVia(msg.headers);
+	headers = rewriteContactIp(headers, ip.wg);
 
 	if (hasSdpContent(msg.headers, content)) {
 		const callId = findHeader(msg.headers, "call-id")?.fieldValue ?? "";
