@@ -31,6 +31,17 @@ export function viaToAddr(via: Header): Deno.NetAddr | null {
 	};
 }
 
+function addTagToTo(toHeaders: Header[]): Header[] {
+	return toHeaders.map((h) => {
+		if (h.fieldValue.includes("tag=")) return h;
+		const tag = TID.now();
+		return {
+			...h,
+			fieldValue: `${h.fieldValue};tag=${tag}`,
+		};
+	});
+}
+
 export function insertVia(headers: Header[], ownIp: string): Header[] {
 	const branch = `z9hG4bK${TID.now()}`;
 	const via: Header = {
@@ -48,6 +59,30 @@ export function removeFirstVia(headers: Header[]): Header[] {
 			return false;
 		}
 		return true;
+	});
+}
+
+export function buildRegisterResponse(req: SIPRequest): string {
+	const contactHeaders = filterHeaders(req.headers, "contact");
+	const expiresHeader = findHeader(req.headers, "expires");
+
+	const headers: Header[] = [
+		...filterHeaders(req.headers, "via"),
+		...filterHeaders(req.headers, "from"),
+		...addTagToTo(filterHeaders(req.headers, "to")),
+		...filterHeaders(req.headers, "call-id"),
+		...filterHeaders(req.headers, "cseq"),
+		...contactHeaders,
+		...(expiresHeader ? [expiresHeader] : []),
+		{ fieldName: "Content-Length", fieldValue: "0" },
+	];
+
+	return stringify({
+		version: "2.0",
+		statusCode: 200,
+		reason: "OK",
+		headers,
+		content: "",
 	});
 }
 

@@ -9,6 +9,7 @@ import {
 } from "./rtp.ts";
 import { rewriteSdpContent } from "./sdp.ts";
 import {
+	buildRegisterResponse,
 	buildResponse,
 	filterHeaders,
 	findHeader,
@@ -38,7 +39,7 @@ async function handleRegister(
 	setLocalPhone(remoteAddr);
 	const from = `${remoteAddr.hostname}:${remoteAddr.port}`;
 	log(`${from}を電話機として登録、200 OK`);
-	await send(socket, buildResponse(200, "OK", req), remoteAddr);
+	await send(socket, buildRegisterResponse(req), remoteAddr);
 }
 
 async function handleOptions(
